@@ -43,3 +43,7 @@ function preventDefault(event) {
 	event.preventDefault();
 	event.stopPropagation();
 }
+
+function cookie2object() {
+	return Object.fromEntries([...document.cookie.split(";").map(c => c.trim()).map(c => c.split("="))])
+}
