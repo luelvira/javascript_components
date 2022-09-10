@@ -1,6 +1,10 @@
 $ = function(selector) {
-	let result = document.querySelectorAll(selector);
-	return selector[0] === '#' ? result[0] : result;
+	let meta_sel = selector.split(" "),
+		lastSelector = meta_sel.slice(-1)[0];
+	if (lastSelector[0] === "#")
+		return document.querySelector(selector);
+	return document.querySelectorAll(selector);
+	
 }
 
 /* prototype helpers */
