@@ -43,7 +43,7 @@ SOFTWARE.
 	padding: 2% 0;
 	box-sizing: border-box;
 	border-radius: 25px;
-	box-shadow: 0 3pxhttps://raw.githubusercontent.com/luck5941/taskApp/main/public/js/Toast.js 10px #0e0e0e;
+	box-shadow: 0 3px 10px #0e0e0e;
 	opacity: 0.95;
 	z-index: 99;
 	${(()=> this._position ? "bottom: 2%" : "top: 2%")()}
