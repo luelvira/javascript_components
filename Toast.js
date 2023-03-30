@@ -1,28 +1,13 @@
-/*
-MIT License
-
-Copyright (c) 2021 Lucas Elvira Martin
-	https://github.com/luck5941/javascript_components
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
+/**
+ * component in charge of offers an interface like android's toast to display
+ * some text on web apps
+ *
+ * @author Lucas Elvira Martín
+ * @version 1.0
+ * @license MIT
+ * @updated 2022-11
+ * @link https://github.com/luelvira/javascript_components
+ */
 (function() {
 	'use strict';
 
@@ -43,10 +28,11 @@ SOFTWARE.
 	padding: 2% 0;
 	box-sizing: border-box;
 	border-radius: 25px;
-	box-shadow: 0 3pxhttps://raw.githubusercontent.com/luck5941/taskApp/main/public/js/Toast.js 10px #0e0e0e;
+	box-shadow: 0 3px 10px #0e0e0e;
 	opacity: 0.95;
 	z-index: 99;
-	${(()=> this._position ? "bottom: 2%" : "top: 2%")()}
+	${(()=> this._position ? "bottom: 2%;" : "top: 2%;")()}
+	${(()=> this._color ? `color: ${this._color};`: "")()}
 }
 #toast.fadein { animation: fadein 1s ease; }
 #toast.fadeout { animation: fadeout 1s ease; }
@@ -63,7 +49,7 @@ SOFTWARE.
 `;
 	}
 
-	const Toast = function(){
+	const Toast = function() {
 		const container = document.createElement("div");
 		const toast = document.createElement("div");
 		toast.setAttribute("id", "toast");
@@ -71,8 +57,6 @@ SOFTWARE.
 		const shadow = container.attachShadow({mode: 'open'});
 		this.style = document.createElement("style");
 		this.style.textContent = "";
-
-
 		shadow.append(this.style, toast);
 		document.body.appendChild(container)
 		this.toastElement = toast;
@@ -84,9 +68,7 @@ SOFTWARE.
 		toast.addEventListener("animationEnd", ()=> totalHidden());
 		toast.addEventListener("msAnimationEnd", ()=> totalHidden());
 		toast.addEventListener("oAnimationEnd", ()=>totalHidden());
-
 	}
-
 
 	Toast.__defineGetter__("BOTTOM", function() {return ToastConstants.BOTTOM});
 	Toast.__defineGetter__("TOP", function() {return ToastConstants.TOP});
@@ -113,11 +95,17 @@ SOFTWARE.
 		this.style.textContent = setStyle.call(this);
 	});
 
-	Toast.makeText = function({duration:duration, text:text, position:position, backgroundColor: backgroundColor}) {
+	Toast.prototype.__defineSetter__("color", function(color) {
+		this._color = color;
+		this.style.textContent = setStyle.call(this);
+	});
+
+	Toast.makeText = function({duration:duration, text:text, position:position, backgroundColor: backgroundColor, color: color}) {
 		toast.duration = parseInt(duration) || Toast.DEFAULT_DURATION;
 		toast.position = typeof(position === "undefined") ? ToastConstants.BOTTOM : position;
 		toast.text = text;
-		toast.backgroundColor = backgroundColor || "#f0f0f0"
+		toast.backgroundColor = backgroundColor || "#f0f0f0";
+		toast.color = color || null;
 		return toast;
 	}
 
