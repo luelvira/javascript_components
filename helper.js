@@ -4,7 +4,6 @@ $ = function(selector) {
 	if (lastSelector[0] === "#")
 		return document.querySelector(selector);
 	return document.querySelectorAll(selector);
-	
 }
 
 /* prototype helpers */
@@ -15,7 +14,7 @@ HTMLElement.prototype.on = function(type, callback) {
 }
 
 HTMLElement.prototype.attr = function(name, value) {
-	if (typeof(value)  != 'undefined')  {
+	if (typeof(value) != 'undefined') {
 		this.setAttribute(name, value);
 		return this;
 	} 
@@ -24,6 +23,7 @@ HTMLElement.prototype.attr = function(name, value) {
 
 HTMLElement.prototype.rattr = function(name) {
 	this.removeAttribute(name);
+	return this;
 }
 
 NodeList.prototype.on = function(type, callback) {
