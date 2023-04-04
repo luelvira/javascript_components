@@ -1,52 +1,8 @@
-/**
- * component in charge of offers an interface like android's toast to display
- * some text on web apps
- *
- * @author Lucas Elvira Martín
- * @version 1.0
- * @license MIT
- * @updated 2022-11
- * @link https://github.com/luelvira/javascript_components
- */
-
 const ToastConstants = {
     BOTTOM: true,
     TOP: false,
     DEFAULT_DURATION: 2000,
 };
-
-function setStyle() {
-    return `
-#toast {
-    background-color: ${this._bgColor};
-    position: fixed;
-    width: 80%;
-    left: 10%;
-    text-align: center;
-    padding: 2% 0;
-    box-sizing: border-box;
-    border-radius: 25px;
-    box-shadow: 0 3px 10px #0e0e0e;
-    opacity: 0.95;
-    z-index: 99;
-    ${(() => (this._position ? "bottom: 2%;" : "top: 2%;"))()}
-    ${(() => (this._color ? `color: ${this._color};` : ""))()}
-}
-#toast.fadein { animation: fadein 1s ease; }
-#toast.fadeout { animation: fadeout 1s ease; }
-
-@keyframes fadein {
-    from { opacity: 0;}
-    to {opacity: 0.95;}
-}
-
-@keyframes fadeout {
-    from { opacity: 0.95;}
-    to {opacity: 0;}
-}
-`;
-}
-
 function hide() {
     this.toastElement.classList.remove("fadein");
     this.toastElement.classList.add("fadeout");
@@ -108,7 +64,7 @@ export class Toast {
         if (pos !== ToastConstants.BOTTOM && pos !== ToastConstants.TOP)
             throw new Error("Error: Toast position must be equal to Toast.BOTTOM or Toast.TOP");
         this._position = pos;
-        this.style.textContent = setStyle.call(this);
+        this.style.textContent = this.setStyle();
     }
 
     /**
@@ -123,7 +79,15 @@ export class Toast {
      */
     set backgroundColor(color) {
         this._bgColor = color;
-        this.style.textContent = setStyle.call(this);
+        this.style.textContent = this.setStyle();
+    }
+
+    /**
+     * @param {string} color the color of the text
+     */
+    set color(color) {
+        this._color = color;
+        this.style.textContent = this.setStyle();
     }
 
     static makeText({ duration, text, position, backgroundColor, color }) {
@@ -142,6 +106,40 @@ export class Toast {
         this.toastElement.classList.add("fadein");
         setTimeout(() => hide.call(this), this._duration + 1000);
     }
+
+    setStyle() {
+        return `
+#toast {
+    background-color: ${this._bgColor};
+    position: fixed;
+    width: 80%;
+    left: 10%;
+    text-align: center;
+    padding: 2% 0;
+    box-sizing: border-box;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px #0e0e0e;
+    opacity: 0.95;
+    z-index: 99;
+    ${(() => (this._position ? "bottom: 2%;" : "top: 2%;"))()}
+    ${(() => (this._color ? `color: ${this._color};` : ""))()}
+}
+#toast.fadein { animation: fadein 1s ease; }
+#toast.fadeout { animation: fadeout 1s ease; }
+
+@keyframes fadein {
+    from { opacity: 0;}
+    to {opacity: 0.95;}
+}
+
+@keyframes fadeout {
+    from { opacity: 0.95;}
+    to {opacity: 0;}
+}
+`;
+    }
+
+
 }
 
 Toast.toast = new Toast();
