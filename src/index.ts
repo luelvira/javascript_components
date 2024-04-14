@@ -26,7 +26,7 @@
 
 import {Toast} from './Toast.js';
 import {Modal} from './Modal.js';
-import {$, preventDefault, cookie2object} from './helper.js';
+import {$, S, preventDefault, cookie2object} from './helper';
 
-export {Toast, Modal, $, preventDefault, cookie2object};
+export {Toast, Modal, $, S, preventDefault, cookie2object};
 
