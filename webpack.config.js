@@ -1,27 +1,26 @@
-//import PACKAGE from './package.json' assert { type: 'json' };
+const PACKAGE = require('./package.json');
 const path = require('path');
 const webpack = require('webpack');
-const {name, version} = {name: "jscomponents", version: "0.0.1"};
+const {name, version} = PACKAGE;
 const banner =  `Copyright ${new Date().getUTCFullYear()}, Lucas Elvira Martín. ${name} ${version}`
-module.exports = {
-  entry: './src/index.ts',
-  mode: 'development',
-  output: {
-    filename: `./jscomponents.min.${version}.js`,
-    library: 'jscomponents',
-    libraryTarget: 'var',
-    umdNamedDefine: true,
-    clean: true
-  },
-  plugins: [
-    new webpack.BannerPlugin(banner),
-  ],
-  module: {
-        rules: [
-            { test: /\.tsx?$/, loader: "ts-loader" },
-        ],
+
+module.exports = (env, args) =>({
+    entry: './src/index.ts',
+    mode: args.mode === "development" ? 'development' : 'production',
+    plugins: [new webpack.BannerPlugin(banner),],
+    watch: args.mode === "development",
+    module: {rules: [{ test: /\.tsx?$/, loader: "ts-loader" },],},
+    resolve: {extensions: ['.tsx', '.ts', '.js'],},
+    //target: 'web',
+    devtool: 'source-map',
+    output: {
+      filename: `./jscomponents.js`,
+      library: {
+        name: 'jscomponents',
+        type: 'amd'
+      },
+      path: path.resolve(__dirname, "dist"),
+      umdNamedDefine: true,
+      clean: true
     },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-  },
-};
+})

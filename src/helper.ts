@@ -1,57 +1,67 @@
-interface ExtendedHTMLElement extends HTMLElement {
+interface iExtendedHTMLElement  {
   on(event:string, callback: (e:Event) => void): this;
-  attr(name:string, value?:string): this|string;
+  attr(name:string, value?:string): this|string|null;
   rattr(name:string):this;
 }
 
-function ExtendedHTMLElement(element:HTMLElement) {
-  Object.assign(this, element);
-}
-
-ExtendedHTMLElement.prototype.on = function(eventType: string, callback: (e:Event) => void): ExtendedHTMLElement {
+class ExtendedHTMLElement extends HTMLElement implements iExtendedHTMLElement {
+  constructor(element:HTMLElement) {
+    super();
+    Object.assign(this, element);
+  }
+  on(eventType: string, callback: (e:Event) => void): this {
 	eventType.split(" ").forEach(eType => this.addEventListener(eType, callback));
 	return this;
   }
-ExtendedHTMLElement.prototype.attr = function(name:string, value?:string): ExtendedHTMLElement|string {
+  attr(name:string, value?:string): this|string|null {
 	if (typeof(value) != 'undefined') {
 		this.setAttribute(name, value);
 		return this;
 	} 
 	return this.getAttribute(name);
   }
-ExtendedHTMLElement.prototype.rattr = function(name:string):ExtendedHTMLElementList {
+  rattr(name:string):this {
 	this.removeAttribute(name);
 	return this;
   }
+}
 
 
-class ExtendedHTMLElementList {
-  private list:NodeList;
-  private iterationCount:number;
-  get length() {
-    return this.list.length;
-  }
-  item(index:number) {
-    return this.list.item(index);
+
+class ExtendedHTMLElementList implements NodeListOf<ExtendedHTMLElement> {
+  iterationCount:number
+  [index:number]: ExtendedHTMLElement;
+  length:number
+  item(i:number): ExtendedHTMLElement {
+    return this[i];
   }
 
-  forEach(callback: (item:Node, index:number, parent: NodeList)=>void, thisArg?:any) {
-    this.list.forEach(callback, thisArg);
+  forEach(callback: (item:ExtendedHTMLElement, index:number, parent: NodeListOf<ExtendedHTMLElement>)=>void, thisArg?:any) {
+    for (let i = 0; i < this.length; i++)
+      callback.call(thisArg, this[i], i, this);
   }
-  entries() {
-    return this.list.entries();
+  entries():IterableIterator<[number, ExtendedHTMLElement]> {
+    const entries: [number, ExtendedHTMLElement][] = [];
+    for (let i = 0; i < this.length; i++) {
+      entries.push([i, this[i]]);
+    }
+    return entries.values();
   }
   keys() {
-    return this.list.keys();
+    return Array.from(Array(this.length).keys()).values();
   }
-  values() { return this.list.values();}
-  constructor(list: NodeList) {
-    this.list = list;
+  values(): IterableIterator<ExtendedHTMLElement> {
+    return Array.from(this).values();
+  }
+
+  [Symbol.iterator](): IterableIterator<ExtendedHTMLElement> {
+    return this.values();
+  }
+  constructor(list: NodeListOf<HTMLElement>) {
     this.iterationCount = 0;
-    Object.assign(this, list);
-  }
-  [Symbol.iterator](): IterableIterator<Node> {
-    return this;
+    this.length = list.length;
+    for (let i = 0; i < this.length; i++)
+      this[i] = new ExtendedHTMLElement(list[i]);
   }
 
   next() {
@@ -73,8 +83,8 @@ class ExtendedHTMLElementList {
     return this;
   }
   
-  each(callback: (item:ExtendedHTMLElement, index:number) => void): ExtendedHTMLElementList {
-    this.forEach(callback)
+  each(callback: (item:HTMLElement, index:number, parent: NodeList) => void): ExtendedHTMLElementList {
+    this.forEach(callback);
     return this;
   }
   
@@ -88,7 +98,7 @@ class ExtendedHTMLElementList {
 Object.setPrototypeOf(ExtendedHTMLElement.prototype, HTMLElement.prototype);
 Object.setPrototypeOf(ExtendedHTMLElementList.prototype, NodeList.prototype);
 
-const S = function(selector: string): ExtendedHTMLElement|ExtendedHTMLElementList {
+const S = function(selector: string): ExtendedHTMLElement|ExtendedHTMLElementList| null {
   let meta_sel = selector.split(" "),
       lastSelector = meta_sel.slice(-1)[0];
   if (lastSelector[0] === "#") {
@@ -97,7 +107,8 @@ const S = function(selector: string): ExtendedHTMLElement|ExtendedHTMLElementLis
   }
   const result = document.querySelectorAll(selector)
   if (result.length)
-    return new ExtendedHTMLElementList(<NodeList>result);
+    return new ExtendedHTMLElementList(<NodeListOf<HTMLElement>>result);
+  return null;
 }
 const $ = S;
 
