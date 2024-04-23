@@ -1,6 +1,6 @@
 {
   "name": "javascript_components",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/jscomponents.js",
   "types": "dist/types/index",
