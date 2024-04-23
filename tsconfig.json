@@ -1,13 +1,14 @@
 {
   "include": ["src/**/*"],
   "compilerOptions": {
+    "target": "esnext",
+    "module": "es2020",
     "allowJs": true,
+    "strict": true,
     "declaration": true,
     "emitDeclarationOnly": false,
-    "outDir": "dist",
-    "sourceMap": true,
-    "target": "esnext",
+    "outDir": "dist/lib",
     "declarationDir": "dist/types",
-    "strict": true
+    "sourceMap": true,
   }
 }

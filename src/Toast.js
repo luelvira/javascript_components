@@ -8,7 +8,7 @@ function hide() {
     this.toastElement.classList.add("fadeout");
 }
 
-export class Toast {
+export default class Toast {
     static toast;
 
     constructor() {

@@ -19,7 +19,7 @@ const setStyle = function() {
 `
 };
 
-export class Modal {
+export default class Modal {
   static modal = null;
   constructor() {
     const container = document.createElement("div");

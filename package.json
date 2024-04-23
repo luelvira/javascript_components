@@ -1,9 +1,9 @@
 {
-  "name": "javascript_components",
+  "name": "jscomponents",
   "version": "1.0.0",
   "description": "",
   "main": "dist/jscomponents.js",
-  "types": "dist/types/index",
+  "types": "dist/types",
   "directories": {
     "test": "test"
   },
